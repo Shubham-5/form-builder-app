@@ -1,22 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "@/lib/utils";
-import {
-  ArrowDown01,
-  Disc2,
-  GripVertical,
-  Link2,
-  Text,
-  Plus,
-  Trash,
-} from "lucide-react";
+import { cn, formFieldIcons } from "@/lib/utils";
+import { Disc2, GripVertical, Plus, Trash } from "lucide-react";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "../ui/text-area";
@@ -83,35 +74,35 @@ export function FormField({
         </div>
         <div className="flex items-start gap-2">
           <Select value={type} onValueChange={onTypeChange}>
-            <SelectTrigger className="w-[180px] border-none">
-              <SelectValue placeholder="-" />
+            <SelectTrigger className="h-8 px-0 border-none">
+              {formFieldIcons[type]}
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="w-[180px]">
               <SelectItem value="short">
                 <div className="flex items-center gap-x-2">
-                  <Text size={14} /> Short Answer
+                  {formFieldIcons["short"]} Short Answer
                 </div>
               </SelectItem>
               <SelectItem value="long">
                 <div className="flex items-center gap-x-2">
-                  <Text size={14} /> Long Answer
+                  {formFieldIcons["long"]} Long Answer
                 </div>
               </SelectItem>
               <SelectItem value="single-select">
                 <div className="flex items-center gap-x-2">
                   <Disc2 size={14} />
-                  Single Select
+                  {formFieldIcons["single-select"]}
                 </div>
               </SelectItem>
               <SelectItem value="number">
                 <div className="flex items-center gap-x-2">
-                  <ArrowDown01 size={14} />
+                  {formFieldIcons["number"]}
                   Number
                 </div>
               </SelectItem>
               <SelectItem value="url">
                 <div className="flex items-center gap-x-2">
-                  <Link2 size={14} />
+                  {formFieldIcons["url"]}
                   URL
                 </div>
               </SelectItem>
