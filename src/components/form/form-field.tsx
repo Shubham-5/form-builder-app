@@ -8,23 +8,22 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "../ui/text-area";
 import { Input } from "../ui/input";
+import { Field } from "@/context/form-context";
 
 interface FormFieldProps
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
-  id: string;
-  label?: string;
-  helpText?: string;
-  type?: "short" | "long" | "single-select" | "number" | "url";
-  error?: string;
-  options?: string[];
-  onLabelChange?: (value: string) => void;
-  onHelpTextChange?: (value: string) => void;
-  onValueChange?: (value: string) => void;
-  onTypeChange?: (value: string) => void;
+  field: Field;
+  onLabelChange: (value: string) => void;
+  onHelpTextChange: (value: string) => void;
+  onValueChange: (value: string) => void;
+  onTypeChange: (
+    value: "short" | "long" | "single-select" | "number" | "url"
+  ) => void;
   onOptionsChange?: (options: string[]) => void;
   dragProps?: {
     attributes?: React.HTMLAttributes<HTMLButtonElement>;
@@ -36,12 +35,7 @@ interface FormFieldProps
 }
 
 export function FormField({
-  id,
-  label,
-  helpText,
-  type = "short",
-  error,
-  options = [],
+  field,
   onLabelChange,
   onHelpTextChange,
   onValueChange,
@@ -52,14 +46,14 @@ export function FormField({
 }: FormFieldProps) {
   const addOption = () => {
     if (onOptionsChange) {
-      onOptionsChange([...options, ""]);
+      onOptionsChange([...(field?.options || []), ""]);
     }
   };
 
   const removeOption = (index: number) => {
     if (onOptionsChange) {
-      const newOptions = options.filter((_, i) => i !== index);
-      onOptionsChange(newOptions);
+      const newOptions = field.options?.filter((_, i) => i !== index);
+      onOptionsChange(newOptions!);
     }
   };
 
@@ -83,17 +77,17 @@ export function FormField({
             placeholder="Write a question"
             className={cn(
               "border-none bg-transparent px-1 -mx-1 text-md",
-              error && "text-red-500",
-              label && "text-black"
+              field?.error && "text-red-500",
+              field?.label && "text-black"
             )}
-            value={label}
-            onChange={(e) => onLabelChange?.(e.target.value)}
+            value={field?.label}
+            onChange={(e) => onLabelChange(e.target.value)}
           />
         </div>
         <div className="flex items-start gap-2">
-          <Select value={type} onValueChange={onTypeChange}>
+          <Select value={field.type} onValueChange={onTypeChange}>
             <SelectTrigger className="h-8 px-0 border-none">
-              {formFieldIcons[type]}
+              <SelectValue>{formFieldIcons[field.type]}</SelectValue>
             </SelectTrigger>
             <SelectContent className="w-[180px]">
               <SelectItem value="short">
@@ -138,12 +132,12 @@ export function FormField({
       <Input
         placeholder="Write a help text or caption (leave empty if not needed)"
         className="border-none bg-transparent h-6 px-1 -mx-1 w-full"
-        value={helpText}
+        value={field.helpText}
         onChange={(e) => onHelpTextChange?.(e.target.value)}
       />
 
       <div className="mt-4">
-        {type === "short" && (
+        {field.type === "short" && (
           <Input
             type="text"
             placeholder="Short answer text"
@@ -152,7 +146,7 @@ export function FormField({
             {...props}
           />
         )}
-        {type === "long" && (
+        {field.type === "long" && (
           <Textarea
             placeholder="Long answer text"
             value={props.value as string}
@@ -160,22 +154,26 @@ export function FormField({
             {...props}
           />
         )}
-        {type === "single-select" && (
+        {field.type === "single-select" && (
           <div className="space-y-2">
-            {options.map((option, index) => (
+            {field.options?.map((option, index) => (
               <div key={index} className="flex items-center gap-2">
-                <Input type="radio" name={`option-${id}`} className="w-4 h-4" />
+                <Input
+                  type="radio"
+                  name={`option-${field.id}`}
+                  className="w-4 h-4"
+                />
                 <Input
                   type="text"
                   value={option}
                   onChange={(e) => {
-                    const newOptions = [...options];
+                    const newOptions = [...(field.options || [])];
                     newOptions[index] = e.target.value;
                     onOptionsChange?.(newOptions);
                   }}
                   placeholder="Option text"
                 />
-                {options?.length > 2 && (
+                {field?.options?.length > 2 && (
                   <Button
                     variant="ghost"
                     size="icon"
@@ -185,7 +183,7 @@ export function FormField({
                   </Button>
                 )}
 
-                {options?.length - 1 === index && (
+                {index === field.options.length - 1 && (
                   <Button
                     className="last:block hidden"
                     variant="ghost"
@@ -199,7 +197,7 @@ export function FormField({
             ))}
           </div>
         )}
-        {type === "number" && (
+        {field.type === "number" && (
           <Input
             type="number"
             placeholder="0"
@@ -208,7 +206,7 @@ export function FormField({
             {...props}
           />
         )}
-        {type === "url" && (
+        {field.type === "url" && (
           <Input
             type="url"
             placeholder="https://example.com"
@@ -218,8 +216,6 @@ export function FormField({
           />
         )}
       </div>
-
-      {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
     </div>
   );
 }

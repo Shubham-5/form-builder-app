@@ -79,7 +79,15 @@ export function FormPreview({
           )}
         </div>
       ))}
-      <Button onClick={onSubmit}>Submit</Button>
+      <div className="flex justify-end">
+        <Button
+          className="bg-green-500 text-white"
+          size="sm"
+          onClick={onSubmit}
+        >
+          Submit
+        </Button>
+      </div>
     </div>
   );
 }
