@@ -38,7 +38,7 @@ export default function Home() {
           ? {
               ...field,
               type: newType,
-              options: newType === "single-select" ? [""] : undefined,
+              options: newType === "single-select" ? ["", ""] : undefined,
             }
           : field
       )

@@ -90,8 +90,8 @@ export function FormField({
               </SelectItem>
               <SelectItem value="single-select">
                 <div className="flex items-center gap-x-2">
-                  <Disc2 size={14} />
                   {formFieldIcons["single-select"]}
+                  Single Select
                 </div>
               </SelectItem>
               <SelectItem value="number">
@@ -153,13 +153,16 @@ export function FormField({
                   }}
                   placeholder="Option text"
                 />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => removeOption(index)}
-                >
-                  <Trash className="h-4 w-4" />
-                </Button>
+                {options?.length > 2 && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeOption(index)}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                )}
+
                 {options?.length - 1 === index && (
                   <Button
                     className="last:block hidden"
