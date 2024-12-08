@@ -37,6 +37,9 @@ interface FormContextType {
   addFormField: () => void;
   removeFormField: (fieldId: string) => void;
   resetCurrentForm: () => void;
+  getFormsByStatus: (
+    status: "draft" | "published" | "submitted"
+  ) => FormData[] | [];
 }
 
 const createEmptyForm = (): FormData => ({
@@ -61,6 +64,7 @@ export const FormBuilderContext = createContext<FormContextType>({
   addFormField: () => {},
   removeFormField: () => {},
   resetCurrentForm: () => {},
+  getFormsByStatus: () => [],
 });
 
 export const FormBuilderProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -184,6 +188,10 @@ export const FormBuilderProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  const getFormsByStatus = (status: "draft" | "published" | "submitted") => {
+    return forms.filter((form) => form.status === status);
+  };
+
   const resetCurrentForm = () => {
     setCurrentForm(null);
   };
@@ -202,6 +210,7 @@ export const FormBuilderProvider: React.FC<{ children: React.ReactNode }> = ({
         addFormField,
         removeFormField,
         resetCurrentForm,
+        getFormsByStatus,
       }}
     >
       {children}
