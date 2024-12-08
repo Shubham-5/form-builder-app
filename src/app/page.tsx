@@ -12,7 +12,7 @@ export default function Home() {
 
   function handleCreateForm() {
     createNewForm();
-    router.push("/create");
+    router.push("/form");
   }
 
   return (
