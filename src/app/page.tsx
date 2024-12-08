@@ -27,7 +27,7 @@ export default function Home() {
 
         <section className="p-4 grid grid-cols-2 gap-4">
           <Link href="/draft" className="bg-gray-50 rounded-2xl border h-32">
-            <div className="z-10 flex flex-col items-center gap-2">
+            <div className="z-10 flex items-center justify-center gap-2 h-full">
               <p className="text-gray-500 font-medium">Draft</p>
             </div>
           </Link>
@@ -36,7 +36,7 @@ export default function Home() {
             href="/published"
             className="bg-gray-50 rounded-2xl border h-32"
           >
-            <div className="z-10 flex flex-col items-center gap-2">
+            <div className="z-10 flex items-center justify-center gap-2 h-full">
               <p className="text-gray-500 font-medium">Published</p>
             </div>
           </Link>
@@ -45,7 +45,7 @@ export default function Home() {
             href="/submitted"
             className="bg-gray-50 rounded-2xl border h-32"
           >
-            <div className="z-10 flex flex-col items-center gap-2">
+            <div className="z-10 flex items-center justify-center gap-2 h-full">
               <p className="text-gray-500 font-medium">Sumitted</p>
             </div>
           </Link>
