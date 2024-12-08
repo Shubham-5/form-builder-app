@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { cn, formFieldIcons } from "@/lib/utils";
-import { Disc2, GripVertical, Plus, Trash } from "lucide-react";
+import { GripVertical, Plus, Trash } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -26,6 +26,13 @@ interface FormFieldProps
   onValueChange?: (value: string) => void;
   onTypeChange?: (value: string) => void;
   onOptionsChange?: (options: string[]) => void;
+  dragProps?: {
+    attributes?: React.HTMLAttributes<HTMLButtonElement>;
+    listeners?: React.HTMLAttributes<HTMLButtonElement>;
+    setNodeRef?: (node: HTMLElement | null) => void;
+    transform?: { x: number; y: number } | null;
+    transition?: string;
+  };
 }
 
 export function FormField({
@@ -33,7 +40,6 @@ export function FormField({
   label,
   helpText,
   type = "short",
-  className,
   error,
   options = [],
   onLabelChange,
@@ -41,6 +47,7 @@ export function FormField({
   onValueChange,
   onTypeChange,
   onOptionsChange,
+  dragProps,
   ...props
 }: FormFieldProps) {
   const addOption = () => {
@@ -56,8 +63,19 @@ export function FormField({
     }
   };
 
+  const dragStyle = dragProps?.transform
+    ? {
+        transform: `translate3d(${dragProps.transform.x}px, ${dragProps.transform.y}px, 0)`,
+        transition: dragProps.transition,
+      }
+    : {};
+
   return (
-    <div className="relative group border border-gray-200 rounded-2xl p-4 bg-white hover:bg-gray-50 transition-colors">
+    <div
+      ref={dragProps?.setNodeRef}
+      style={dragStyle}
+      className="relative group border border-gray-200 rounded-2xl p-4 bg-white hover:bg-gray-50 transition-colors"
+    >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1 space-y-2">
           <Input
@@ -108,7 +126,11 @@ export function FormField({
               </SelectItem>
             </SelectContent>
           </Select>
-          <button className="p-2 hover:bg-gray-100 rounded-md">
+          <button
+            {...dragProps?.attributes}
+            {...dragProps?.listeners}
+            className="p-2 hover:bg-gray-100 rounded-md cursor-move"
+          >
             <GripVertical size={16} />
           </button>
         </div>

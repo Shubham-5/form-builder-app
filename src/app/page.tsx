@@ -1,4 +1,21 @@
 "use client";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+  SortableContext,
+  useSortable,
+} from "@dnd-kit/sortable";
+
 import { FormField } from "@/components/form/form-field";
 import { FormPreview } from "@/components/form/form-preview";
 import { Button } from "@/components/ui/button";
@@ -16,12 +33,76 @@ interface Field {
   error?: string;
 }
 
+function SortableField({
+  field,
+  onLabelChange,
+  onHelpTextChange,
+  onValueChange,
+  onTypeChange,
+  onOptionsChange,
+}: {
+  field: Field;
+  onLabelChange: (value: string) => void;
+  onHelpTextChange: (value: string) => void;
+  onValueChange: (value: string) => void;
+  onTypeChange: (value: Field["type"]) => void;
+  onOptionsChange: (options: string[]) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: field.id });
+
+  return (
+    <FormField
+      key={field.id}
+      id={field.id}
+      label={field.label}
+      helpText={field.helpText}
+      type={field.type}
+      value={field.value}
+      options={field.options}
+      error={field.error}
+      onLabelChange={onLabelChange}
+      onHelpTextChange={onHelpTextChange}
+      onValueChange={onValueChange}
+      onTypeChange={onTypeChange}
+      onOptionsChange={onOptionsChange}
+      dragProps={{
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+      }}
+    />
+  );
+}
+
 export default function Home() {
   const [formStep, setFormStep] = useState<"create" | "preview">("create");
   const [formTitle, setFormTitle] = useState("");
   const [fields, setFields] = useState<Field[]>([]);
   const [completionPercentage, setCompletionPercentage] = useState(0);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      setFields((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over?.id);
+
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
 
   const handleFieldChange = (id: string, key: keyof Field, value: string) => {
     setFields(
@@ -111,37 +192,50 @@ export default function Home() {
           )}
         </header>
 
-        <section className="h-[calc(100vh-114px)] p-4 space-y-2 overflow-y-scroll">
+        <section className="h-[calc(100vh-114px)] p-4 space-y-2 overflow-y-scroll relative">
           {formStep === "create" ? (
-            <>
-              {fields.map((field) => (
-                <FormField
-                  key={field.id}
-                  id={field.id}
-                  label={field.label}
-                  helpText={field.helpText}
-                  type={field.type}
-                  value={field.value}
-                  options={field.options}
-                  error={field.error}
-                  onLabelChange={(value) =>
-                    handleFieldChange(field.id, "label", value)
-                  }
-                  onHelpTextChange={(value) =>
-                    handleFieldChange(field.id, "helpText", value)
-                  }
-                  onValueChange={(value) =>
-                    handleFieldChange(field.id, "value", value)
-                  }
-                  onTypeChange={(value) =>
-                    handleTypeChange(field.id, value as Field["type"])
-                  }
-                  onOptionsChange={(options) =>
-                    handleOptionsChange(field.id, options)
-                  }
-                />
-              ))}
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+            >
+              <SortableContext
+                items={fields.map((field) => field.id)}
+                strategy={rectSortingStrategy}
+              >
+                {fields.map((field) => (
+                  <SortableField
+                    key={field.id}
+                    field={field}
+                    onLabelChange={(value) =>
+                      handleFieldChange(field.id, "label", value)
+                    }
+                    onHelpTextChange={(value) =>
+                      handleFieldChange(field.id, "helpText", value)
+                    }
+                    onValueChange={(value) =>
+                      handleFieldChange(field.id, "value", value)
+                    }
+                    onTypeChange={(value) =>
+                      handleTypeChange(field.id, value as Field["type"])
+                    }
+                    onOptionsChange={(options) =>
+                      handleOptionsChange(field.id, options)
+                    }
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+          ) : (
+            <FormPreview
+              fields={fields}
+              onFieldChange={handleFieldChange}
+              onSubmit={handleFormSubmit}
+            />
+          )}
 
+          {formStep === "create" && (
+            <div className="flex justify-center">
               <Button
                 variant="outline"
                 className="gap-x-2 my-4"
@@ -150,13 +244,7 @@ export default function Home() {
               >
                 <Plus className="h-4 w-4" /> Add Question
               </Button>
-            </>
-          ) : (
-            <FormPreview
-              fields={fields}
-              onFieldChange={handleFieldChange}
-              onSubmit={handleFormSubmit}
-            />
+            </div>
           )}
         </section>
 
