@@ -123,13 +123,13 @@ export const FormBuilderProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       setForms([...forms, newForm]);
     }
-
     setCurrentForm(newForm);
   };
 
   const publishForm = () => {
     if (currentForm) {
       saveForm({ ...currentForm, status: "published" });
+      alert("Form is published successfuly");
     }
   };
 
