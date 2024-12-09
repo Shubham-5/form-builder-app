@@ -16,12 +16,16 @@ interface Field {
 
 interface FormPreviewProps {
   fields: Field[];
+  status: "draft" | "published" | "submitted";
+  completionPercentage: number;
   onFieldChange: (id: string, key: keyof Field, value: string) => void;
   onSubmit: () => void;
 }
 
 export function FormPreview({
   fields,
+  status,
+  completionPercentage,
   onFieldChange,
   onSubmit,
 }: FormPreviewProps) {
@@ -79,11 +83,16 @@ export function FormPreview({
           )}
         </div>
       ))}
-      <div className="flex justify-end">
+      <div className="absolute bottom-5 right-5">
         <Button
           className="bg-green-500 text-white"
           size="sm"
           onClick={onSubmit}
+          disabled={
+            status === "draft" ||
+            status === "submitted" ||
+            completionPercentage !== 100
+          }
         >
           Submit
         </Button>

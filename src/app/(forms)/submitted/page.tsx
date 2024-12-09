@@ -18,12 +18,15 @@ export default function SubmittedFormsPage() {
             </Link>
             <h2 className="font-medium text-center mx-auto">Submitted</h2>
           </header>
-          <div className="space-y-4">
+          <div className="space-y-4 p-4">
             {submittedForms.length === 0 ? (
               <p className="p-4 text-center">No submitted forms found.</p>
             ) : (
               submittedForms.map((form) => (
-                <div key={form.id} className="border p-4 rounded-lg">
+                <div
+                  key={form.id}
+                  className="border p-4 rounded-2xl bg-gray-50"
+                >
                   <h2 className="font-medium">{form.title}</h2>
                   <p className="text-sm text-gray-500">
                     Submitted: {new Date(form.updatedAt).toLocaleDateString()}

@@ -68,7 +68,7 @@ const SortableField = ({
   );
 };
 
-export default function CreatePage() {
+export default function FormPage() {
   const {
     currentForm,
     saveForm,
@@ -146,7 +146,10 @@ export default function CreatePage() {
             className="gap-x-2"
             size="sm"
             onClick={handlePreview}
-            disabled={currentForm.status !== "draft"}
+            disabled={
+              currentForm.status === "submitted" ||
+              currentForm.fields.length === 0
+            }
           >
             Preview <ArrowUpRight size={14} />
           </Button>
@@ -198,7 +201,7 @@ export default function CreatePage() {
           </div>
         </section>
 
-        <footer className="flex items-center justify-between h-14 px-4 border-gray-200 border-t">
+        <footer className="flex items-center justify-between h-14 px-4 border-gray-200 bg-gray-50 border-t">
           <Button
             variant="outline"
             className="gap-x-2"
@@ -207,6 +210,7 @@ export default function CreatePage() {
               saveForm({ ...currentForm, status: "draft" });
               alert("Form successfully saved in draft");
             }}
+            disabled={currentForm.fields.length === 0}
           >
             <FilePenLine className="h-4 w-4" /> Save as Draft
           </Button>
