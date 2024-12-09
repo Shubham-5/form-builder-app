@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Form Builder
 
-## Getting Started
+## Project Overview
 
-First, run the development server:
+A sophisticated, user-friendly form builder application built with React, Next.js, and TypeScript. This project allows users to dynamically create, preview, publish and submit forms with multiple input types.
+
+## 🌟 Features
+
+### Form Creation
+
+- Start with an empty form
+- Add and customize form questions
+- Support for 5 different input types:
+  1. Short Answer
+  2. Long Answer
+  3. Single Select
+  4. Number
+  5. URL
+
+### Drag and Drop Interface
+
+- Reorder form fields using intuitive drag-and-drop functionality
+- Smooth UI for adding and modifying questions
+
+### Form Management
+
+- Save forms as drafts
+- Publish completed forms
+- Preview form before submission
+- Submit form on published
+
+### Form Submission
+
+- Track form completeness percentage
+- Display success message upon 100% completion
+
+## 🛠 Tech Stack
+
+- **Frontend**: React, Next.js
+- **State Management**: React Context
+- **CSS Library**: Tailwind CSS
+- **Drag and Drop**: @dnd-kit
+- **Icons**: Lucide React
+- **Language**: TypeScript
+
+## 📦 Prerequisites
+
+- Node.js (v18 or later)
+- npm or yarn
+
+## 🔧 Setup Instructions
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/Shubham-5/form-builder-app.git
+cd form-builder
+```
+
+2. Install dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Run development server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open `http://localhost:3000` in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📂 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+├── components/
+│   ├── form/
+│   │   ├── form-field.tsx
+│   │   └── form-preview.tsx
+│   └── ui/
+│       ├── button.tsx
+│       └── input.tsx
+├── context/
+│   └── form-context.tsx
+├── hooks/
+│   └── use-form.tsx
+├── lib/
+│   └── utils.tsx
+├── app/
+│   ├── layout.tsx           # Application layout
+│   ├── page.tsx             # Homepage
+│   ├── (forms)/             # Group for form-related pages
+│   │   ├── form/            # Page to fill a form
+│   │   │   ├── page.tsx
+│   │   │   └── preview/     # Nested preview page under form
+│   │   │       └── page.tsx
+│   │   ├── draft/           # Drafts page
+│   │   │   └── page.tsx
+│   │   ├── published/       # Published forms page
+│   │   │   └── page.tsx
+│   │   ├── submitted/       # Submitted forms page
+│   │   │   └── page.tsx
+└── README.md
+```
 
-## Learn More
+## 🔍 Key Components
 
-To learn more about Next.js, take a look at the following resources:
+### Home Page (`/`)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Create new form
+- View draft, published, and submitted forms
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Form Builder (`/form`)
 
-## Deploy on Vercel
+- Add questions
+- Change input types
+- Drag and reorder fields
+- Save as draft or publish
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Form Preview (`/form/preview`)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Complete form
+- Track form completeness
+- Submit form
+- Display success message
