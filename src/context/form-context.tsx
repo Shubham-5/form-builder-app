@@ -71,7 +71,7 @@ export const FormBuilderProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [forms, setForms] = useState<FormData[]>(() => {
-    if (typeof window === "undefined") {
+    if (typeof window !== "undefined") {
       const savedForms = localStorage.getItem("formBuilderForms");
       return savedForms ? JSON.parse(savedForms) : [];
     }
@@ -79,28 +79,28 @@ export const FormBuilderProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   const [currentForm, setCurrentForm] = useState<FormData | null>(() => {
-    if (typeof window === "undefined") {
+    if (typeof window !== "undefined") {
       const savedCurrentForm = localStorage.getItem("currentForm");
       return savedCurrentForm ? JSON.parse(savedCurrentForm) : null;
     }
     return null;
   });
 
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     localStorage.setItem("formBuilderForms", JSON.stringify(forms));
-  //   }
-  // }, [forms]);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("formBuilderForms", JSON.stringify(forms));
+    }
+  }, [forms]);
 
-  // useEffect(() => {
-  //   if (typeof window !== "undefined") {
-  //     if (currentForm) {
-  //       localStorage.setItem("currentForm", JSON.stringify(currentForm));
-  //     } else {
-  //       localStorage.removeItem("currentForm");
-  //     }
-  //   }
-  // }, [currentForm]);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (currentForm) {
+        localStorage.setItem("currentForm", JSON.stringify(currentForm));
+      } else {
+        localStorage.removeItem("currentForm");
+      }
+    }
+  }, [currentForm]);
 
   const createNewForm = () => {
     const newForm = createEmptyForm();
